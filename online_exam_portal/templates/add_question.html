@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+
+<body>
+<div class="form-container">
+
+<h2>Add Questions 📝</h2>
+
+<!-- 🧾 FORM CARD -->
+<div class="page-content">
+
+    <form method="POST">
+
+        <input type="text" name="question" placeholder="Enter Question" required>
+
+        <input type="text" name="option1" placeholder="Option 1" required>
+        <input type="text" name="option2" placeholder="Option 2" required>
+        <input type="text" name="option3" placeholder="Option 3" required>
+        <input type="text" name="option4" placeholder="Option 4" required>
+
+        <input type="text" name="answer" placeholder="Correct Answer" required>
+
+        <button type="submit">Add Question</button>
+
+    </form>
+
+    <br>
+
+    <!-- ✅ Finish Exam -->
+    <a href="/finish_exam/{{ exam_id }}">
+        <button>Finish Exam</button>
+    </a>
+
+</div>
+
+<!-- 📋 QUESTIONS LIST -->
+<h3 style="color:white; margin-top:20px;">Added Questions</h3>
+
+{% if questions %}
+
+    <div class="grid">
+
+    {% for q in questions %}
+
+        <div class="card">
+
+            <p><b>Q{{ loop.index }}: {{ q.question }}</b></p>
+
+            <p>
+                1. {{ q.option1 }} <br>
+                2. {{ q.option2 }} <br>
+                3. {{ q.option3 }} <br>
+                4. {{ q.option4 }}
+            </p>
+
+            <p><b>Answer:</b> {{ q.answer }}</p>
+
+            <br>
+
+            <!-- ✏️ Edit -->
+            <a href="/edit_question/{{ q.id }}">
+                <button>Edit</button>
+            </a>
+
+            <!-- 🗑 Delete -->
+            <a href="/delete_question/{{ q.id }}/{{ exam_id }}">
+                <button>Delete</button>
+            </a>
+
+        </div>
+
+    {% endfor %}
+
+    </div>
+
+{% else %}
+    <p style="color:white;">No questions added yet.</p>
+{% endif %}
+```
+
+</div>
+
+</div>
+</body>
+</html>

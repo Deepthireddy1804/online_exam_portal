@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- 🔥 Top Bar -->
+    <div class="top-bar">
+        <h2>Student Dashboard 🎓</h2>
+        <a href="/logout">
+            <button class="logout-btn">Logout</button>
+        </a>
+    </div>
+
+    <!-- 🔥 Exam Cards -->
+    <div class="test-container">
+
+        {% for exam in exams %}
+        <div class="test-card">
+
+            <h3>{{ exam.title }}</h3>
+
+            <p>Start: {{ exam.start_time }}</p>
+            <p>End: {{ exam.end_time }}</p>
+
+            {% if exam.id in result_dict %}
+                <button class="completed-btn" disabled>Completed</button>
+                <p class="score-text">Score: {{ result_dict[exam.id] }}</p>
+
+            {% elif now >= exam.start_time and now <= exam.end_time %}
+                <a href="/exam/{{ exam.id }}">
+                    <button class="start-btn">Start Exam</button>
+                </a>
+
+            {% else %}
+                <button class="inactive-btn" disabled>Not Active</button>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

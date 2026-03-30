@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    
+<body>
+
+<div class="center-wrapper">
+    <div class="card">
+        <h2>Create Exam</h2>
+
+        <form method="POST">
+            
+            <div class="form-group">
+                <label>Exam Title</label>
+                <input type="text" name="title">
+            </div>
+
+            <div class="form-group">
+                <label>Start Time</label>
+                <input type="datetime-local" name="start_time">
+            </div>
+
+            <div class="form-group">
+                <label>End Time</label>
+                <input type="datetime-local" name="end_time">
+            </div>
+
+            <div class="form-group">
+                <input type="text" name="exam_name" placeholder="Enter Exam Name">
+            </div>
+
+            <button type="submit">Create Exam</button>
+
+        </form>
+    </div>
+</div>
+</body>
+</html>

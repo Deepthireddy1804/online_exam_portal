@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<div class="container">
+
+<h2>Admin Dashboard 👨‍💻</h2>
+
+<div class="card">
+    <p>Welcome {{ session['name'] }}</p>
+
+    <a href="/create_exam">
+        <button>Create Exam</button>
+    </a>
+</div>
+
+<div class="grid">
+
+{% for item in exam_data %}
+    <div class="card">
+        <h3>{{ item.exam.title }}</h3>
+
+        <p>Questions: {{ item.count }}</p>
+
+        {% if item.exam.status == "Completed" %}
+            <p class="success">Completed</p>
+        {% else %}
+            <p style="color:orange;">In Progress</p>
+            <a href="/add_question/{{ item.exam.id }}">
+                <button>Add Questions</button>
+            </a>
+        {% endif %}
+
+        <br><br>
+
+        <a href="/view_results/{{ item.exam.id }}"><button>Results</button></a>
+        <a href="/leaderboard/{{ item.exam.id }}"><button>Leaderboard</button></a>
+        <a href="/edit_exam/{{ item.exam.id }}"><button>Edit</button></a>
+        <a href="/delete_exam/{{ item.exam.id }}"><button>Delete</button></a>
+    </div>
+{% endfor %}
+
+</div>
+
+<br>
+<a href="/logout"><button class="logout-btn">Logout</button></a>
+
+</div>
+</div>
+
+
+</body>
+</html>

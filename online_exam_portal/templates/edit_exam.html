@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+<body>
+
+<h1>Edit Exam</h1>
+
+<!-- 🔹 EDIT EXAM DETAILS -->
+<form method="POST">
+
+    Title:
+    <input type="text" name="title" value="{{ exam.title }}"><br><br>
+
+    Start Time:
+    <input type="datetime-local" name="start_time"
+           value="{{ exam.start_time.strftime('%Y-%m-%dT%H:%M') }}"><br><br>
+
+    End Time:
+    <input type="datetime-local" name="end_time"
+           value="{{ exam.end_time.strftime('%Y-%m-%dT%H:%M') }}"><br><br>
+
+    <button type="submit">Update Exam</button>
+
+</form>
+
+<hr>
+
+<h3>Manage Questions</h3>
+
+<!-- 🔹 SHOW QUESTIONS -->
+{% for q in questions %}
+
+    <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+
+        <p><b>Q{{ loop.index }}: {{ q.question }}</b></p>
+
+        <p>
+            1. {{ q.option1 }} <br>
+            2. {{ q.option2 }} <br>
+            3. {{ q.option3 }} <br>
+            4. {{ q.option4 }}
+        </p>
+
+        <p><b>Answer:</b> {{ q.answer }}</p>
+
+        <!-- ✏️ EDIT QUESTION -->
+        <a href="/edit_question/{{ q.id }}">
+            <button>Edit</button>
+        </a>
+
+        <!-- 🗑 DELETE QUESTION -->
+        <a href="/delete_question/{{ q.id }}/{{ exam.id }}">
+            <button>Delete</button>
+        </a>
+
+    </div>
+
+{% endfor %}
+
+<br>
+
+<!-- ➕ ADD NEW QUESTION -->
+<a href="/add_question/{{ exam.id }}">
+    <button>Add New Question</button>
+</a>
+
+</body>
+</html>

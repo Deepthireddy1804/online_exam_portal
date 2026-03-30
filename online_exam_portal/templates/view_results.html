@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    
+    </head>
+<body>
+<div class="results-container">
+
+<h2 class="results-title">Student Results 📊</h2>
+
+{% for r in data %}
+    <p>{{ r.name }} - {{ r.score }}</p>
+{% endfor %}
+
+<a href="/admin_dashboard">
+    <button class="back-btn">Back</button>
+
+</a>
+
+</body>
+</html>

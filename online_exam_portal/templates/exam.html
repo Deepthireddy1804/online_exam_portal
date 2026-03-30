@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exam</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <script>
+        let current = 0;
+        let answers = {}; // ✅ stores answers
+
+        function showQuestion(index) {
+            let questions = document.getElementsByClassName("question");
+
+            for (let i = 0; i < questions.length; i++) {
+                questions[i].style.display = "none";
+            }
+
+            questions[index].style.display = "block";
+
+            restoreAnswer(); // ✅ restore when showing
+        }
+
+        function saveAnswer() {
+            let currentQ = document.getElementsByClassName("question")[current];
+            let radios = currentQ.querySelectorAll("input[type=radio]");
+
+            radios.forEach(radio => {
+                if (radio.checked) {
+                    answers[radio.name] = radio.value;
+                }
+            });
+        }
+
+        function restoreAnswer() {
+            let currentQ = document.getElementsByClassName("question")[current];
+            let radios = currentQ.querySelectorAll("input[type=radio]");
+
+            radios.forEach(radio => {
+                if (answers[radio.name] === radio.value) {
+                    radio.checked = true;
+                }
+            });
+        }
+
+        function nextQuestion() {
+            saveAnswer(); // ✅ save before moving
+
+            let questions = document.getElementsByClassName("question");
+            if (current < questions.length - 1) {
+                current++;
+                showQuestion(current);
+            }
+        }
+
+        function prevQuestion() {
+            saveAnswer(); // ✅ save before moving
+
+            if (current > 0) {
+                current--;
+                showQuestion(current);
+            }
+        }
+
+        window.onload = function () {
+            showQuestion(current);
+        };
+
+        // 🚫 Anti-cheating
+        let warningCount = 0;
+        const maxWarnings = 1;
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                warningCount++;
+
+                if (warningCount >= maxWarnings) {
+                    alert("You switched tabs! Exam will be submitted.");
+                    document.getElementById("examForm").submit();
+                } else {
+                    alert("Warning: Do not switch tabs!");
+                }
+            }
+        });
+
+        document.addEventListener("contextmenu", e => e.preventDefault());
+
+        document.onkeydown = function(e) {
+            if (e.ctrlKey || e.key === "F12") {
+                return false;
+            }
+        };
+    </script>
+
+</head>
+<body>
+
+<h2>Exam Page 📝</h2>
+
+<!-- ⏱ TIMER -->
+<h3 id="timer" style="color:red;"></h3>
+
+<form method="POST" id="examForm">
+
+    {% for q in questions %}
+        <div class="question">
+
+            <p><b>{{ loop.index }}. {{ q.question }}</b></p>
+
+            <input type="radio" name="q{{ q.id }}" value="{{ q.option1 }}"> {{ q.option1 }}<br>
+            <input type="radio" name="q{{ q.id }}" value="{{ q.option2 }}"> {{ q.option2 }}<br>
+            <input type="radio" name="q{{ q.id }}" value="{{ q.option3 }}"> {{ q.option3 }}<br>
+            <input type="radio" name="q{{ q.id }}" value="{{ q.option4 }}"> {{ q.option4 }}<br>
+
+        </div>
+    {% endfor %}
+
+    <br>
+
+    <button type="button" onclick="prevQuestion()">Previous</button>
+    <button type="button" onclick="nextQuestion()">Next</button>
+
+    <br><br>
+
+    <button type="submit" onclick="saveAnswer()">Submit Exam</button>
+
+</form>
+
+<!-- ⏱ TIMER SCRIPT -->
+<script>
+    let endTime = new Date("{{ end_time }}").getTime();
+
+    let timer = setInterval(function () {
+
+        let now = new Date().getTime();
+        let distance = endTime - now;
+
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("timer").innerHTML =
+            "Time Left: " + minutes + "m " + seconds + "s";
+
+        if (distance < 0) {
+            clearInterval(timer);
+            alert("Time up! Submitting exam...");
+            document.getElementById("examForm").submit();
+        }
+
+    }, 1000);
+</script>
+
+</body>
+</html>
